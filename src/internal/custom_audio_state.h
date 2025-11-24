@@ -56,13 +56,13 @@ class CustomAudioState : public webrtc::AudioState {
     return config_.audio_device_module.get();
   }
 
-  void AddReceivingStream(webrtc::AudioReceiveStreamInterface* stream) override;
+  void AddReceivingStream(webrtc::AudioReceiveStreamInterface* stream);
   void RemoveReceivingStream(
-      webrtc::AudioReceiveStreamInterface* stream) override;
+      webrtc::AudioReceiveStreamInterface* stream);
 
   void AddSendingStream(webrtc::AudioSendStream* stream, int sample_rate_hz,
-                        size_t num_channels) override;
-  void RemoveSendingStream(webrtc::AudioSendStream* stream) override;
+                        size_t num_channels);
+  void RemoveSendingStream(webrtc::AudioSendStream* stream);
 
  private:
   void UpdateAudioTransportWithSendingStreams();

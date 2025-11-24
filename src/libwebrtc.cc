@@ -1,11 +1,35 @@
 #include "libwebrtc.h"
 
+#include <rtc_base/logging.h>
 #include "api/scoped_refptr.h"
 #include "rtc_base/ssl_adapter.h"
 #include "rtc_base/thread.h"
 #include "rtc_peerconnection_factory_impl.h"
 
 namespace libwebrtc {
+    static LibWebRTC::LogCallback rtcLogCallback = NULL;
+    class WebRTCRedirectLogSink : virtual public rtc::LogSink
+    {
+    public:
+        void OnLogMessage(const std::string &message)
+        {
+        }
+        void OnLogMessage(const rtc::LogLineRef &line)
+        {
+            const auto threadId = line.thread_id().has_value() ? std::to_string(line.thread_id().value()) : "";
+            std::string msg = std::string(line.tag().data()) + ":" + threadId + ": " + line.message().data();
+            if (rtcLogCallback)
+            {
+              rtcLogCallback((int)line.severity(), line.filename().data(), line.line(), msg.c_str());
+            }            
+        }
+    };
+
+    rtc::LogSink *libwebrtcRedirectLogSink()
+    {
+        static WebRTCRedirectLogSink logSink;
+        return &logSink;
+    }
 
 // Initialize static variable g_is_initialized to false.
 static bool g_is_initialized = false;
@@ -14,6 +38,9 @@ static bool g_is_initialized = false;
 bool LibWebRTC::Initialize() {
   if (!g_is_initialized) {
     rtc::InitializeSSL();
+    rtc::LogMessage::LogThreads(true);
+    rtc::LogMessage::LogToDebug(rtc::LoggingSeverity::LS_NONE);
+    rtc::LogMessage::AddLogToStream(libwebrtcRedirectLogSink(), rtc::LoggingSeverity::LS_VERBOSE);
     g_is_initialized = true;
   }
   return g_is_initialized;
@@ -36,6 +63,11 @@ LibWebRTC::CreateRTCPeerConnectionFactory() {
           new RefCountedObject<RTCPeerConnectionFactoryImpl>());
   rtc_peerconnection_factory->Initialize();
   return rtc_peerconnection_factory;
+}
+
+void LibWebRTC::RegisterLogCallback(LogCallback callback)
+{
+  rtcLogCallback = callback;
 }
 
 }  // namespace libwebrtc

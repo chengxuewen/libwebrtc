@@ -53,6 +53,9 @@ class LibWebRTC {
    *
    */
   LIB_WEBRTC_API static void Terminate();
+
+  typedef void (*LogCallback)(int level, const char *filename, int line, const char *msg);
+  LIB_WEBRTC_API static void RegisterLogCallback(LogCallback callback);
 };
 
 }  // namespace libwebrtc
