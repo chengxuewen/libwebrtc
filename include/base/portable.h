@@ -436,4 +436,13 @@ class local_ptr {
 
 }  // namespace portable
 
+namespace std {
+    template<>
+    struct less<portable::string> {
+        bool operator()(const portable::string& a, const portable::string& b) const {
+            return std::strcmp(a.c_string(), b.c_string()) < 0;
+        }
+    };
+}
+
 #endif  // INFINISPAN_HOTROD_PORTABLE_H

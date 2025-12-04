@@ -27,7 +27,7 @@ class RTCDtlsTransportInformation : public RefCountInterface {
 
 class RTCDtlsTransportObserver {
  public:
-  virtual void OnStateChange(RTCDtlsTransportInformation info) = 0;
+  virtual void OnStateChange(scoped_refptr<RTCDtlsTransportInformation> info) = 0;
 
   virtual void OnError(const int type, const char* message) = 0;
 

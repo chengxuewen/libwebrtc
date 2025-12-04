@@ -48,6 +48,7 @@ enum class RTCDegradationPreference {
 };
 
 class RTCRtcpFeedback : public RefCountInterface {
+   public:
   virtual RTCRtcpFeedbackType type() = 0;
   virtual void set_type(RTCRtcpFeedbackType value) = 0;
 

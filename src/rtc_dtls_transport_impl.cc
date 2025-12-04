@@ -59,7 +59,11 @@ void RTCDtlsTransportImpl::UnregisterObserver() {
 }
 
 void RTCDtlsTransportImpl::OnStateChange(
-    webrtc::DtlsTransportInformation info) {}
+    webrtc::DtlsTransportInformation info) {
+      if (observer_) {
+        observer_->OnStateChange( new RefCountedObject<RTCDtlsTransportInformationImpl>(info));
+      }
+    }
 
 void RTCDtlsTransportImpl::OnError(webrtc::RTCError error) {
   if (observer_) {
