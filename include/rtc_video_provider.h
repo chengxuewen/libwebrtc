@@ -21,7 +21,7 @@ class LIB_WEBRTC_API RTCVideoProvider : public RefCountInterface {
     return scoped_refptr<RTCVideoProvider>(
         new RefCountedObject<RTCVideoProvider>());
   }
-  LIB_WEBRTC_API static scoped_refptr<RTCVideoCapturer> CreateCapturer(
+  static scoped_refptr<RTCVideoCapturer> CreateCapturer(
       scoped_refptr<RTCVideoProvider> provider);
 
   void AddRenderer(RTCVideoRenderer<scoped_refptr<RTCVideoFrame>>* renderer);
